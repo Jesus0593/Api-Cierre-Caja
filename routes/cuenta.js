@@ -10,6 +10,18 @@ router.get('/getConfiguracion', async (req, res) => {
         
         const pool = await dbConex.connectToDefalutBD();
         const result = await pool.request()
+            .query(QuerysCuentas.getAllCuentasConfig)
+        ;
+        res.status(200).json(result.recordset); // Devuelve los datos como JSON
+    } catch (error) {
+        res.status(500).send('Error al obtener los datos: ' + error.message);
+    }
+});
+router.get('/getAllCuentas', async (req, res) => {
+    try {
+        const database = req.query.db
+        const pool = await dbConex.connectToDB(database);
+        const result = await pool.request()
             .query(QuerysCuentas.getAllCuentas)
         ;
         res.status(200).json(result.recordset); // Devuelve los datos como JSON
@@ -21,8 +33,8 @@ router.post('/updateConfiguracion', async (req, res) => {
     const { COMISIONBANCARIA,RAIZPAGARE,IVA,FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO, RAIZUTILIDAD, APERTURA } = req.body; // Obtener datos del JSON recibido
 
     // Validar datos
-    if (!COMISIONBANCARIA || !RAIZPAGARE || !IVA || !FALTANTEVENTA || !SOBRANTEVENTA || !FALTANTEREDONDEO || !SOBRANTEREDONDEO || !RAIZUTILIDAD || !APERTURA ) {
-        return res.status(400).json({ error: 'Faltan datos requeridos (COMISIONBANCARIA,RAIZPAGARE,IVA,FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO, RAIZUTILIDAD, APERTURA)' });
+    if ( !FALTANTEVENTA || !SOBRANTEVENTA || !FALTANTEREDONDEO || !SOBRANTEREDONDEO  ) {
+        return res.status(400).json({ error: 'Faltan datos requeridos (FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO)' });
     }
 
     try {
@@ -31,15 +43,12 @@ router.post('/updateConfiguracion', async (req, res) => {
 
         // Consulta SQL para insertar los datos
         const result = await pool.request()
-            .input('COMISIONBANCARIA', mssql.VarChar, COMISIONBANCARIA)
-            .input('RAIZPAGARE', mssql.VarChar, RAIZPAGARE)
-            .input('IVA', mssql.VarChar, IVA)
+            
             .input('FALTANTEVENTA', mssql.VarChar, FALTANTEVENTA)
             .input('SOBRANTEVENTA', mssql.VarChar, SOBRANTEVENTA)
             .input('FALTANTEREDONDEO', mssql.VarChar, FALTANTEREDONDEO)
             .input('SOBRANTEREDONDEO', mssql.VarChar, SOBRANTEREDONDEO)
-            .input('RAIZUTILIDAD', mssql.VarChar, RAIZUTILIDAD)
-            .input('APERTURA', mssql.VarChar, APERTURA)
+        
             .query(QuerysCuentas.postAllCuentas);
 
         res.status(201).json({

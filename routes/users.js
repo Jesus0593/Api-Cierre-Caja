@@ -32,7 +32,8 @@ router.get('/getEmpresas', async (req, res) => {
         // Encriptar el campo DB en cada registro
         const encryptedData = result.recordset.map((row) => ({
             ...row,
-            DB: secure.encrypt(row.DB), // Encripta el campo DB
+            DB_GESTION: secure.encrypt(row.DB_GESTION),
+            DB_CONTABLE:secure.encrypt(row.DB_CONTABLE), // Encripta el campo DB
         }));
 
         res.status(200).json(encryptedData);
