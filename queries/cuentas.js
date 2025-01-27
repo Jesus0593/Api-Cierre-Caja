@@ -3,7 +3,7 @@ export const QuerysCuentas =
     getAllCuentasConfig:
     `
         SELECT 
-            * 
+            FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO 
         FROM
             RIP_CONFIGURACIONCUENTAS WITH(NOLOCK)
     `,

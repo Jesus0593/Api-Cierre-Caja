@@ -21,25 +21,6 @@ router.get('/getUsuarios', async (req, res) => {
     }
 });
 
-router.get('/getEmpresas', async (req, res) => {
-    try {
-        const id = req.query.id
-        const pool = await dbConex.connectToDefalutBD();
-        const result = await pool.request()
-            .input('CODUSUARIO',mssql.Int,id)
-            .query(QuerysUser.getEmpresaToId)
-        ;
-        // Encriptar el campo DB en cada registro
-        const encryptedData = result.recordset.map((row) => ({
-            ...row,
-            DB_GESTION: secure.encrypt(row.DB_GESTION),
-            DB_CONTABLE:secure.encrypt(row.DB_CONTABLE), // Encripta el campo DB
-        }));
 
-        res.status(200).json(encryptedData);
-    } catch (error) {
-        res.status(500).send('Error al obtener los datos: ' + error.message);
-    }
-});
 
 export default router;

@@ -1,6 +1,6 @@
 import express from 'express';
 import { dbConex } from '../dbconfig.js';
-import { QuerysCuentas } from '../queries/cuenta.js';
+import { QuerysCuentas } from '../queries/cuentas.js';
 import mssql from 'mssql'
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router.get('/getConfiguracion', async (req, res) => {
 });
 router.get('/getAllCuentas', async (req, res) => {
     try {
-        const database = req.query.db
+        const database = req.query.database
         const pool = await dbConex.connectToDB(database);
         const result = await pool.request()
             .query(QuerysCuentas.getAllCuentas)
@@ -30,7 +30,7 @@ router.get('/getAllCuentas', async (req, res) => {
     }
 });
 router.post('/updateConfiguracion', async (req, res) => {
-    const { COMISIONBANCARIA,RAIZPAGARE,IVA,FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO, RAIZUTILIDAD, APERTURA } = req.body; // Obtener datos del JSON recibido
+    const { FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO } = req.body; // Obtener datos del JSON recibido
 
     // Validar datos
     if ( !FALTANTEVENTA || !SOBRANTEVENTA || !FALTANTEREDONDEO || !SOBRANTEREDONDEO  ) {
