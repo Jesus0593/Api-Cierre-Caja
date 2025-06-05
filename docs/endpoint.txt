@@ -6,7 +6,7 @@ EMPRESAS
     GET /api/empresas/getEmpresas?id
         Retorna la informacion de todas las empresas que puede manejar un usuario
 
-    GET /api/empresas/getTiendas?database
+    GET /api/empresas/getTiendasCajas?database
         Retorna la informacion de todas las tiendas de una empresas
         *database tipo gestion
 

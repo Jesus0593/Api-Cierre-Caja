@@ -99,7 +99,7 @@ export const QuerysEmpresas =
             S.SERIE SERIE,
             S.DESCRIPCION DESCRIPCION,
             SUBSTRING(EC.PATHBD, CHARINDEX(':',EC.PATHBD)+1,LEN(EC.PATHBD)) BD
-            , SCL.CODCLIENTE CODCLIENTE
+            , ISNULL(SCL.CODCLIENTE,0) CODCLIENTE
             , CAJA.IDFRONT
         FROM
             SERIES S 
