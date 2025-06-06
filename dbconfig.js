@@ -19,6 +19,7 @@ const config = {
 export class dbConex{
     static async connectToDefalutBD(){
         try {
+            await sql.close(); // Cierra cualquier conexión previa
             const pool = await sql.connect(config);
             console.log('Conexión a SQL Server exitosa');
             return pool;
@@ -30,6 +31,7 @@ export class dbConex{
     static async connectToDB(databaseName) {
         const configAux = { ...config, database: secure.decrypt(databaseName) }; // Configuración con la base de datos específica
         try {
+            await sql.close(); // Cierra cualquier conexión previa
             const pool = await sql.connect(configAux);
             console.log(`Conexión exitosa a la base de datos: ${databaseName}`);
             return pool;

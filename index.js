@@ -4,6 +4,7 @@ import usuariosRoutes from './routes/users.js'
 import cuentasRoutes from './routes/cuentas.js'
 import monedasRoutes from './routes/monedas.js'
 import empresasRoutes from './routes/empresas.js'
+import cajaRoutes from './routes/caja.js'
 
 const app = express();
 const PORT = 3000;
@@ -17,7 +18,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/empresas',empresasRoutes);
 app.use('/api/cuentas', cuentasRoutes);
 app.use('/api/monedas',monedasRoutes);
-
+app.use('/api/caja', cajaRoutes);
 
 
 
