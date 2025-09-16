@@ -18,8 +18,29 @@ router.get('/getEmpresas', async (req, res) => {
         // Encriptar el campo DB en cada registro
         const encryptedData = result.recordset.map((row) => ({
             ...row,
+            DB_GESTION: secure.encrypt(row.DB_GESTION), // Encripta el campo DB
+        }));
+
+        res.status(200).json(encryptedData);
+    } catch (error) {
+        res.status(500).send('Error al obtener los datos: ' + error.message);
+    }
+});
+router.get('/getEmpresasContables', async (req, res) => {
+    try {
+        const id = req.query.id
+        const database = req.query.db
+        const pool = await dbConex.connectToDefalutBD();
+        const result = await pool.request()
+            .input('CODUSUARIO',mssql.Int,id)
+            .input('BD',mssql.NVarChar,database)
+            .query(QuerysEmpresas.getEmpresaContableToId)
+        ;
+        // Encriptar el campo DB en cada registro
+        const encryptedData = result.recordset.map((row) => ({
+            ...row,
             DB_GESTION: secure.encrypt(row.DB_GESTION),
-            DB_CONTABLE:secure.encrypt(row.DB_CONTABLE), // Encripta el campo DB
+            DB_CONTABLE: secure.encrypt(row.DB_CONTABLE), // Encripta el campo DB
         }));
 
         res.status(200).json(encryptedData);
