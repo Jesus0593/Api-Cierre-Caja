@@ -5,7 +5,7 @@ import cuentasRoutes from './routes/cuentas.js'
 import monedasRoutes from './routes/monedas.js'
 import empresasRoutes from './routes/empresas.js'
 import cajaRoutes from './routes/caja.js'
-
+import configuracionRoutes from './routes/configuracion.js'
 const app = express();
 const PORT = 3000;
 
@@ -14,11 +14,12 @@ app.use(bodyParser.json());
 
 // Ruta: Obtener todos los registros
 
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/empresas',empresasRoutes);
-app.use('/api/cuentas', cuentasRoutes);
-app.use('/api/monedas',monedasRoutes);
-app.use('/api/caja', cajaRoutes);
+app.use('/ApiCierreCaja/usuarios', usuariosRoutes);
+app.use('/ApiCierreCaja/empresas',empresasRoutes);
+app.use('/ApiCierreCaja/cuentas', cuentasRoutes);
+app.use('/ApiCierreCaja/monedas',monedasRoutes);
+app.use('/ApiCierreCaja/caja', cajaRoutes);
+app.use('/ApiCierreCaja/configuracion', configuracionRoutes);
 
 
 
