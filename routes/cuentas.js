@@ -2,10 +2,11 @@ import express from 'express';
 import { dbConex } from '../dbconfig.js';
 import { QuerysCuentas } from '../queries/cuentas.js';
 import mssql from 'mssql'
+import { verifyToken } from '../VerificarToken.js';
 
 const router = express.Router();
 
-router.get('/getConfiguracion', async (req, res) => {
+router.get('/getConfiguracion',verifyToken, async (req, res) => {
     try {
         
         const pool = await dbConex.connectToDefalutBD();
@@ -17,7 +18,7 @@ router.get('/getConfiguracion', async (req, res) => {
         res.status(500).send('Error al obtener los datos: ' + error.message);
     }
 });
-router.get('/getAllCuentas', async (req, res) => {
+router.get('/getAllCuentas',verifyToken, async (req, res) => {
     try {
         const database = req.query.database
         const pool = await dbConex.connectToDB(database);
@@ -29,7 +30,7 @@ router.get('/getAllCuentas', async (req, res) => {
         res.status(500).send('Error al obtener los datos: ' + error.message);
     }
 });
-router.post('/updateConfiguracion', async (req, res) => {
+router.post('/updateConfiguracion',verifyToken, async (req, res) => {
     const { FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO } = req.body; // Obtener datos del JSON recibido
 
     // Validar datos

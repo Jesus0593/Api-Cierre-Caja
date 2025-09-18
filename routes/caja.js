@@ -2,12 +2,12 @@ import express from 'express';
 import { dbConex } from '../dbconfig.js';
 import { QuerysCajas } from '../queries/caja.js';
 import mssql from 'mssql'
-import Encryptor from '../Security.js';
-const secure = new Encryptor();
+import { verifyToken } from '../VerificarToken.js';
+
 
 const router = express.Router();
 
-router.get('/getResultadoCaja', async (req, res) => {
+router.get('/getResultadoCaja', verifyToken, async (req, res) => {
     try {
   
         const db = req.query.database

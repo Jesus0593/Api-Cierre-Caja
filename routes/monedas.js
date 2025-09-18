@@ -3,11 +3,12 @@ import { dbConex } from '../dbconfig.js';
 import { QuerysMonedas } from '../queries/monedas.js';
 import mssql from 'mssql'
 import Encryptor from '../Security.js';
+import { verifyToken } from '../VerificarToken.js';
 const secure = new Encryptor();
 
 const router = express.Router();
 
-router.get('/getConvertir', async (req, res) => {
+router.get('/getConvertir',verifyToken, async (req, res) => {
     try {
   
         const db = req.query.database

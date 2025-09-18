@@ -3,11 +3,12 @@ import { dbConex } from '../dbconfig.js';
 import { QuerysEmpresas } from '../queries/empresas.js';
 import mssql from 'mssql'
 import Encryptor from '../Security.js';
+import { verifyToken } from '../VerificarToken.js';
 const secure = new Encryptor();
 
 const router = express.Router();
 
-router.get('/getEmpresas', async (req, res) => {
+router.get('/getEmpresas',,verifyToken, async (req, res) => {
     try {
         const id = req.query.id
         const pool = await dbConex.connectToDefalutBD();
