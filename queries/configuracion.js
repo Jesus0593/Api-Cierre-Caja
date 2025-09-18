@@ -131,6 +131,40 @@ export const QuerysConfiguracion = {
         ) ON [PRIMARY]
       END
       
+    `,
+    `
+    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[RipCaja].[PROC_GETCOTIZACION]') AND type in(N'P'))
+	BEGIN
+	  EXEC ('
+        CREATE PROCEDURE [rip].[PROC_GETCOTIZACION](@FECHA AS DATE , @IMPORTE AS FLOAT=1) AS SET NOCOUNT ON
+            DECLARE 
+              @MONEDA_VES AS INT =4
+              , @MONEDA_USD AS INT=2
+              , @MONEDA_EUR AS INT=3
+
+            DECLARE
+              @ISO_MONEDA_VES AS NVARCHAR(3)=(SELECT M.CODIGOISO FROM MONEDAS M WHERE M.CODMONEDA=@MONEDA_VES)
+              , @ISO_MONEDA_USD AS NVARCHAR(3)=(SELECT M.CODIGOISO FROM MONEDAS M WHERE M.CODMONEDA=@MONEDA_USD)
+              , @ISO_MONEDA_EUR AS NVARCHAR(3)=(SELECT M.CODIGOISO FROM MONEDAS M WHERE M.CODMONEDA=@MONEDA_EUR)
+
+            --PRIMERO DE BS A TODAS LAS MONEDAS
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_VES+'' = ''+FORMAT(@IMPORTE/dbo.F_GET_COTIZACION(@FECHA, @MONEDA_VES),''n'',''es-VE'')+'' ''+@ISO_MONEDA_USD MENSAJE
+            UNION ALL
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_VES+'' = ''+FORMAT(@IMPORTE/dbo.F_GET_COTIZACION(@FECHA, @MONEDA_VES)*1/dbo.F_GET_COTIZACION(@FECHA, @MONEDA_EUR),''n'',''es-VE'')+'' ''+@ISO_MONEDA_EUR MENSAJE
+            --AHORA DE USD AL RESTO
+            UNION ALL
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_USD+'' = ''+FORMAT(@IMPORTE*dbo.F_GET_COTIZACION(@FECHA, @MONEDA_VES),''n'',''es-VE'')+'' ''+@ISO_MONEDA_VES MENSAJE
+            UNION ALL
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_USD+'' = ''+FORMAT(@IMPORTE*1/dbo.F_GET_COTIZACION(@FECHA, @MONEDA_EUR),''n'',''es-VE'')+'' ''+@ISO_MONEDA_EUR MENSAJE
+            --AHORA DE EUROS AL RESTO
+            --AHORA DE USD AL RESTO
+            UNION ALL
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_EUR+'' = ''+FORMAT(@IMPORTE*dbo.F_GET_COTIZACION(@FECHA, @MONEDA_EUR)*dbo.F_GET_COTIZACION(@FECHA, @MONEDA_VES),''n'',''es-VE'')+'' ''+@ISO_MONEDA_VES MENSAJE
+            UNION ALL
+            SELECT FORMAT(@IMPORTE,''n'',''es-VE'')+'' ''+ @ISO_MONEDA_EUR+'' = ''+FORMAT(@IMPORTE*dbo.F_GET_COTIZACION(@FECHA, @MONEDA_EUR),''n'',''es-VE'')+'' ''+@ISO_MONEDA_USD MENSAJE
+	')
+	END
+
     `
   ]
 };
