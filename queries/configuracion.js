@@ -109,6 +109,28 @@ export const QuerysConfiguracion = {
           ')
       END 
 
+    `,
+    `
+    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[RIP_FORMASPAGOS]') 
+				AND type in (N'U')) 
+      BEGIN
+        CREATE TABLE [dbo].[RIP_FORMASPAGOS](
+          [ID] [int] IDENTITY(1,1) NOT NULL,
+          [DESCRIPCION] [nvarchar](100) NOT NULL
+        ) ON [PRIMARY]
+      END
+      
+    `, 
+    `
+    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[RIP_RELACIONFORMASPAGO]') 
+				AND type in (N'U')) 
+      BEGIN
+       CREATE TABLE [dbo].[RIP_RELACIONFORMASPAGO](
+          [CODFORMAPAGO] [nvarchar](6) NULL,
+          [IDFORMAPAGO] [int] NULL
+        ) ON [PRIMARY]
+      END
+      
     `
   ]
 };

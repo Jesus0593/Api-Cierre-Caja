@@ -8,7 +8,7 @@ const secure = new Encryptor();
 
 const router = express.Router();
 
-router.get('/getEmpresas',,verifyToken, async (req, res) => {
+router.get('/getEmpresas',verifyToken, async (req, res) => {
     try {
         const id = req.query.id
         const pool = await dbConex.connectToDefalutBD();
