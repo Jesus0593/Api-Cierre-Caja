@@ -2,18 +2,18 @@ import express from 'express';
 import { dbConex } from '../dbconfig.js';
 import { QuerysUser } from '../queries/users.js';
 import mssql from 'mssql'
-import Encryptor from '../Security.js';
-const secure = new Encryptor();
+import { verifyToken } from '../VerificarToken.js';
+
 
 const router = express.Router();
 
-router.get('/getUsuarios', async (req, res) => {
+router.get('/getUsuarios',verifyToken, async (req, res) => {
     try {
-        const pass = req.query.pass
+        const id = req.query.id
         const pool = await dbConex.connectToDefalutBD();
         const result = await pool.request()
-            .input('PASS',mssql.NVarChar,pass)
-            .query(QuerysUser.getUserToPass)
+            .input('CODUSUARIO',mssql.Int,id)
+            .query(QuerysUser.getUserToId)
         ;
         res.status(200).json(result.recordset); // Devuelve los datos como JSON
     } catch (error) {

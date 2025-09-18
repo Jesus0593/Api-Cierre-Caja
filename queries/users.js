@@ -1,6 +1,6 @@
 export const QuerysUser = 
 {
-    getUserToPass:
+    getUserToId:
 	`
 		SELECT 
         	US.USUARIO,
@@ -9,7 +9,18 @@ export const QuerysUser =
 			USUARIOS US WITH(NOLOCK) 
 			INNER JOIN RIP_PERMISOSUSUARIOS PU WITH(NOLOCK) ON PU.CODUSUARIO = US.CODUSUARIO
 		WHERE 
+			US.CODUSUARIO = @CODUSUARIO
+	`,
+	getUserToPass:
+	`
+		SELECT 
+        	US.USUARIO,
+        	US.CODUSUARIO
+		FROM 
+			USUARIOS US WITH(NOLOCK) 
+			INNER JOIN RIP_PERMISOSUSUARIOS PU WITH(NOLOCK) ON PU.CODUSUARIO = US.CODUSUARIO
+		WHERE 
 			US.NEWPASS = @PASS
 	`
-	
+		
 }

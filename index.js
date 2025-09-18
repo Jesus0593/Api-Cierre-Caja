@@ -5,6 +5,7 @@ import cuentasRoutes from './routes/cuentas.js'
 import monedasRoutes from './routes/monedas.js'
 import empresasRoutes from './routes/empresas.js'
 import cajaRoutes from './routes/caja.js'
+import loginRoutes from './routes/login.js'
 import configuracionRoutes from './routes/configuracion.js'
 const app = express();
 const PORT = 3000;
@@ -14,6 +15,8 @@ app.use(bodyParser.json());
 
 // Ruta: Obtener todos los registros
 
+
+app.use('/ApiCierreCaja',loginRoutes);
 app.use('/ApiCierreCaja/usuarios', usuariosRoutes);
 app.use('/ApiCierreCaja/empresas',empresasRoutes);
 app.use('/ApiCierreCaja/cuentas', cuentasRoutes);
