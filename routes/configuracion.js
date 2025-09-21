@@ -7,7 +7,7 @@ import { verifyToken } from '../VerificarToken.js';
 
 const router = express.Router();
 
-router.get('/ejecutarScriptGeneral',verifyToken, async (req, res) => {
+router.get('/ejecutarScriptGeneral', async (req, res) => {
   try {
     const pool = await dbConex.connectToDefalutBD();
     
