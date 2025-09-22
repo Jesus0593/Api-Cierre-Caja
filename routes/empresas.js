@@ -8,12 +8,12 @@ const secure = new Encryptor();
 
 const router = express.Router();
 
-router.get('/getEmpresas',verifyToken, async (req, res) => {
+router.post('/getEmpresas',verifyToken, async (req, res) => {
     try {
-        const id = req.query.id
+        const { codusuario } = req.body;
         const pool = await dbConex.connectToDefalutBD();
         const result = await pool.request()
-            .input('CODUSUARIO',mssql.Int,id)
+            .input('CODUSUARIO',mssql.Int,codusuario)
             .query(QuerysEmpresas.getEmpresaToId)
         ;
         // Encriptar el campo DB en cada registro

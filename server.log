@@ -1,0 +1,2 @@
+[2025-09-22T15:18:13.066Z] Error grave en el proceso para A4949E92939B: Error de inicio de sesión del usuario 'ICGAdmin'.
+[2025-09-22T18:26:52.309Z] Error en 94909F968DA5 al ejecutar la sentencia: IF NOT EXISTS (SELECT * FROM sys.objects WHERE obj... | Incorrect syntax near '0'.

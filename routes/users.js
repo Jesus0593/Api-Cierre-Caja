@@ -7,36 +7,37 @@ import { verifyToken } from '../VerificarToken.js';
 
 const router = express.Router();
 
-router.get('/getUsuarios',verifyToken, async (req, res) => {
+router.post('/getUsuarios',verifyToken, async (req, res) => {
  try {
-    const id = req.query.id
+    
+    const { codusuario } = req.body;
     const pool = await dbConex.connectToDefalutBD();
     const result = await pool.request()
-    .input('CODUSUARIO',mssql.Int,id)
+    .input('CODUSUARIO',mssql.Int,codusuario)
     .query(QuerysUser.getUserToId);
     //res.status(200).json(result.recordset); // Devuelve los datos como JSON
     const agrupar = result.recordset.reduce((acc, curr) => {
         const { CODUSUARIO, USUARIO, CODMODULO, MODULO, CODSUBMODULO, SUBMODULO } = curr;
         if(!acc[CODUSUARIO]) {
             acc[CODUSUARIO] = {
-                codUsuario: CODUSUARIO,
+                codusuario: CODUSUARIO,
                 usuario: USUARIO,
                 permisos : []
             };
         }
-        let modulo = acc[CODUSUARIO].permisos.find(m => m.codModulo === CODMODULO);
+        let modulo = acc[CODUSUARIO].permisos.find(m => m.codmodulo === CODMODULO);
         if(!modulo) {
             modulo = {
-                codModulo: CODMODULO,
+                codmodulo: CODMODULO,
                 modulo: MODULO,
-                subModulos: []
+                submodulos: []
             };
             acc[CODUSUARIO].permisos.push(modulo);
         }
         if(CODSUBMODULO) {
-            modulo.subModulos.push({
-                codSubModulo: CODSUBMODULO,
-                subModulo: SUBMODULO
+            modulo.submodulos.push({
+                codsubmodulo: CODSUBMODULO,
+                submodulo: SUBMODULO
             });
         } return acc;}, {});
     const resultadoFinal = Object.values(agrupar);

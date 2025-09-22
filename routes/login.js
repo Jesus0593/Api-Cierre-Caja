@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
       const user = result.recordset[0];
       
     const payload = {
-          id: user.CODUSUARIO,
+          codUsuaio: user.CODUSUARIO,
           usuario: user.USUARIO
       };
       
@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
       
       res.status(200).json({
           message: 'Autenticación exitosa',
-          id: user.CODUSUARIO,
+          codusuaio: user.CODUSUARIO,
           usuario: user.USUARIO,
           token: token
          

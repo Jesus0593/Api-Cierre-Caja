@@ -7,6 +7,8 @@ import empresasRoutes from './routes/empresas.js'
 import cajaRoutes from './routes/caja.js'
 import loginRoutes from './routes/login.js'
 import configuracionRoutes from './routes/configuracion.js'
+import Encryptor from './Security.js';
+const secure = new Encryptor();
 const app = express();
 const PORT = 3000;
 
@@ -29,5 +31,5 @@ app.use('/ApiCierreCaja/configuracion', configuracionRoutes);
 
 // Servidor en escucha
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}, ${secure.encrypt('FAMILY')}`);
 });
