@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
           usuario: user.USUARIO
       };
       
-      const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '2h' });
+      const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '24h' });
       
       res.status(200).json({
           message: 'Autenticación exitosa',

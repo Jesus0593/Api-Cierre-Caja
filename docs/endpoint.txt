@@ -1,32 +1,5 @@
-USUARIOS
-    GET /api/usuarios/getUsuarios?pass
-        Retorna la informacion de un usario en especifico
+/ApiCierreCaja/configuracion/ejecutarScriptGeneral
+    Ejecuta un Script sobre la Base General, la cual sirve de base para todas las Base de Datos de gestion
 
-EMPRESAS
-    GET /api/empresas/getEmpresas?id
-        Retorna la informacion de todas las empresas que puede manejar un usuario
-
-    GET /api/empresas/getTiendasCajas?database
-        Retorna la informacion de todas las tiendas de una empresas
-        *database tipo gestion A4949E92939B
-
-CUENTAS
-    GET /api/cuentas/getConfiguracion
-        Retorna las cuentas para manejo de Faltantes y Sobrantes
-    
-    GET /api/cuentas/getAllCuentas?database
-        Retorna Todas las cuentas para poder elegir las cuentas de Faltantes y Sobrantes
-        *database de tipo contable B190968E988D97918B7E8186
-
-    POST 
-        Actualiza las cuentas de Faltantes y Sobrantes
-        * requiere un json const { FALTANTEVENTA,SOBRANTEVENTA,FALTANTEREDONDEO,SOBRANTEREDONDEO }
-
-MONEDAS 
-    GET /api/monedas/getConvertir?database?fecha?importe
-        Realiza las diferentes conversiones entre las diferentes monedas que posea la tienda
-        *database de tipo gestion 8F9393A4829897
-
-CAJA
-    GET /api/caja/getResultadoCaja?database?fecha?caja
-        Realiza el Resunen de la caja
+/ApiCierreCaja/configuracion/ejecutarScriptEmpresas
+    Ejecuta un un Script sobre la Base de gestion que ella utiliza
