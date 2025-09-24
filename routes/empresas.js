@@ -10,48 +10,48 @@ const router = express.Router();
 
 router.post('/getEmpresas',verifyToken, async (req, res) => {
     try {
-        const { codusuario } = req.body;
+        const { user } = req.body;
         const pool = await dbConex.connectToDefalutBD();
         const result = await pool.request()
-            .input('CODUSUARIO',mssql.Int,codusuario)
+            .input('CODUSUARIO',mssql.Int,user)
             .query(QuerysEmpresas.getEmpresaToId)
         ;
         // Encriptar el campo DB en cada registro
-        const encryptedData = result.recordset.map((row) => ({
+        /*const encryptedData = result.recordset.map((row) => ({
             ...row,
-            DB_GESTION: secure.encrypt(row.DB_GESTION), // Encripta el campo DB
-        }));
-
-        res.status(200).json(encryptedData);
+            BDGESTION: secure.encrypt(row.BDGESTION), // Encripta el campo DB
+        }));*/
+        const agrupar = result.recordset.reduce((acc, curr) => {
+        const { CODUSUARIO, USUARIO, CODEMPRESAGESTION, GESTION, BDGESTION } = curr;
+        if(!acc[CODUSUARIO]) {
+            acc[CODUSUARIO] = {
+                codusuario: CODUSUARIO,
+                usuario: USUARIO,
+                empresas : []
+            };
+        }
+        let modulo = acc[CODUSUARIO].empresas.find(m => m.codempresa === CODEMPRESAGESTION);
+        if(!modulo) {
+            modulo = {
+                codempresa: CODEMPRESAGESTION,
+                gestion: GESTION,
+                bdgestion: secure.encrypt(BDGESTION), // Encripta el campo BDGESTION
+                
+            };
+            acc[CODUSUARIO].empresas.push(modulo);
+        }
+         return acc;}, {});
+    const resultadoFinal = Object.values(agrupar);
+    res.status(200).json(resultadoFinal);
     } catch (error) {
         res.status(500).send('Error al obtener los datos: ' + error.message);
     }
 });
-router.get('/getEmpresasContables', async (req, res) => {
-    try {
-        const id = req.query.id
-        const database = req.query.db
-        const pool = await dbConex.connectToDefalutBD();
-        const result = await pool.request()
-            .input('CODUSUARIO',mssql.Int,id)
-            .input('BD',mssql.NVarChar,database)
-            .query(QuerysEmpresas.getEmpresaContableToId)
-        ;
-        // Encriptar el campo DB en cada registro
-        const encryptedData = result.recordset.map((row) => ({
-            ...row,
-            DB_GESTION: secure.encrypt(row.DB_GESTION),
-            DB_CONTABLE: secure.encrypt(row.DB_CONTABLE), // Encripta el campo DB
-        }));
 
-        res.status(200).json(encryptedData);
-    } catch (error) {
-        res.status(500).send('Error al obtener los datos: ' + error.message);
-    }
-});
-router.get('/getTiendasCajas', async (req, res) => {
+router.post('/getTiendasCajas', async (req, res) => {
     try {
-        const database = req.query.database
+        
+        const { database } = req.body;
         const pool = await dbConex.connectToDB(database);
         const result = await pool.request()
             .query(QuerysEmpresas.getTiendas)
