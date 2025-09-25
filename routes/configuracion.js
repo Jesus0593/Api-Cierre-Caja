@@ -62,7 +62,12 @@ router.get('/ejecutarScriptGeneral', async (req, res) => {
 
 router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
     const errores = []; // Array para almacenar los errores de cada sentencia
-    const { database } = req.body; 
+    const { codusuario,database } = req.body; 
+    
+   // Validar datos
+  if (database === null || database === undefined || codusuario === null || codusuario === undefined) {
+        return res.status(400).json({ error: 'Faltan datos requeridos (codusuario, database)' });
+    }
 
     try {
         const pool = await dbConex.connectToDB(database);

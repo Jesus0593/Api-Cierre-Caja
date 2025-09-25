@@ -3,7 +3,7 @@ export const QuerysMonedas =
     getToConvert:
 	`
 		
-		EXEC RIP.PROC_GETCOTIZACION @FECHA , @IMPORTE
+		EXEC ripAppWeb.PROC_GETCOTIZACION @FECHA , @IMPORTE
 	`
 	
 }
