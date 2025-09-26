@@ -67,12 +67,12 @@ router.post('/getTiendasCajas', async (req, res) => {
 
         res.status(200).json(encryptedData);*/
         const agrupar = result.recordset.reduce((acc, curr) => {
-        const { CODCLIENTE, IDFRONT, SERIE, DESCRIPCION, BD } = curr;
+        const { CODCLIENTE, IDFRONT, SERIE, DESCRIPCION, BDCONTABLE } = curr;
         if(!acc[CODCLIENTE]) {
             acc[CODCLIENTE] = {
                 codcliente: CODCLIENTE,
                 idfront: IDFRONT,
-                bdcontable: secure.encrypt(BD), // Encripta el campo BDGESTION
+                bdcontable: secure.encrypt(BDCONTABLE), // Encripta el campo BDGESTION
                 cajas : []
             };
         }
