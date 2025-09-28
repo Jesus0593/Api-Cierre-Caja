@@ -23,7 +23,7 @@ app.use('/ApiCierreCaja/usuarios', usuariosRoutes);//
 app.use('/ApiCierreCaja/empresas',empresasRoutes);//
 app.use('/ApiCierreCaja/cuentas', cuentasRoutes);//
 app.use('/ApiCierreCaja/monedas',monedasRoutes);//
-app.use('/ApiCierreCaja/caja', cajaRoutes);
+app.use('/ApiCierreCaja/cajas', cajaRoutes);
 app.use('/ApiCierreCaja/configuracion', configuracionRoutes);//
 
 

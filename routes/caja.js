@@ -39,7 +39,57 @@ router.post('/getResultadoCaja', verifyToken, async (req, res) => {
             .input('CAJA',mssql.NVarChar,caja)
             .query(QuerysCajas.getResultadoCaja)
         ;
-        res.status(200).json(result.recordset); // Devuelve los datos como JSON
+
+        //res.status(200).json(result.recordset); // Devuelve los datos como JSON
+        const agrupar = result.recordset.reduce((acc, curr) => {
+        const { FECHA, CAJA, Z, CODFORMAPAGO, DESCRIPCION, IMPORTE,DECLARADO,SERIECAJA,FO,CERRADO,DIFERENCIA,COTIPAGO,IMPORTE_LOCA,DECLARADO_LOCAL,TASA_VES } = curr;
+        if(!acc[FECHA]) {
+            acc[FECHA] = {
+                fecha: FECHA,
+                cajas : []
+            };
+        }
+        let modulo = acc[FECHA].cajas.find(m => m.caja === CAJA);
+        if(!modulo) {
+            modulo = {
+                caja: CAJA,
+                z: Z,
+                formasdepago : []
+            };
+            acc[FECHA].cajas.push(modulo);
+        }
+        let submodulo = modulo.formasdepago.find(sm => sm.codformapago === CODFORMAPAGO);
+        if(!submodulo) {    
+            submodulo = {
+                codformapago: CODFORMAPAGO,
+                descripcion: DESCRIPCION,
+                importe: IMPORTE,
+                declarado: DECLARADO,
+                seriecaja: SERIECAJA, 
+                fo: FO,
+                cerrado: CERRADO,
+                diferencia: DIFERENCIA,
+                cotipago: COTIPAGO,
+                importe_local: IMPORTE_LOCA,
+                declarado_local: DECLARADO_LOCAL,
+                tasa_ves: TASA_VES      
+            };
+            modulo.formasdepago.push(submodulo);
+
+        }
+         return acc;}, {});
+    const resultadoFinal = Object.values(agrupar);
+    const objetoUsuario = resultadoFinal[0];
+         // 2. Manejar el caso si no se encontró el usuario
+        if (!objetoUsuario) {
+             const rutaNotFoundMessage = `Aviso en ${ruta}/getResultadoCaja' | Usuario ${codusuario} no tiene permisos.`;
+             await writeLog(rutaNotFoundMessage);
+             // Devuelve un 404 si el usuario no tiene datos
+             return res.status(404).json({ message: 'Usuario no encontrado o sin empresas asignadas.' });
+        }
+    res.status(200).json(objetoUsuario)
+
+
         const rutaexitoMessage = `Exito en ${ruta}/getResultadoCaja' | Consulta de resultado de caja realizada correctamente.`;
         await writeLog(rutaexitoMessage);
     } catch (error) {
@@ -58,7 +108,7 @@ router.post('/getVerAsiento', async (req, res) => {
             return res.status(400).json({ error: 'Faltan datos requeridos (database, fecha, caja, redondeo, z)' });
             
         }    
-        const pool = await dbConex.connectToDB(db);
+        const pool = await dbConex.connectToDB(database);
         const result = await pool.request()
             .input('FECHA',mssql.Date,fecha)
             .input('CAJA',mssql.NVarChar,caja)

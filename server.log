@@ -42,3 +42,19 @@
 [2025-09-28T20:12:47.214Z] Error en /ApiCierreCaja/cuentas/getAllCuentas' | CODUSUARIO is not defined
 [2025-09-28T20:13:06.854Z] Exito en /ApiCierreCaja/cuentas/getAllCuentas' | Obtención de todas las cuentas realizada correctamente.
 [2025-09-28T20:24:38.080Z] Exito en /ApiCierreCaja/cuentas/getAllCuentas' | Obtención de todas las cuentas realizada correctamente.
+[2025-09-28T20:36:38.631Z] Exito en /ApiCierreCaja/cuentas/getConfiguracion' | Usuario 0 obtuvo su configuración correctamente.
+[2025-09-28T20:40:55.296Z] Exito en /ApiCierreCaja/cuentas/updateConfiguracion' | Configuración de cuentas actualizada correctamente.
+[2025-09-28T20:41:20.260Z] Exito en /ApiCierreCaja/cuentas/getConfiguracion' | Usuario 0 obtuvo su configuración correctamente.
+[2025-09-28T20:55:54.784Z] Exito en /ApiCierreCaja/cuentas/updateConfiguracion' | Configuración de cuentas actualizada correctamente.
+[2025-09-28T20:56:02.908Z] Exito en /ApiCierreCaja/cuentas/getConfiguracion' | Usuario 0 obtuvo su configuración correctamente.
+[2025-09-28T21:01:06.626Z] Error en /ApiCierreCaja/monedas/getConvertir' | Faltan datos requeridos (database, fecha, importe)
+[2025-09-28T21:02:13.388Z] Error en /ApiCierreCaja/monedas/getConvertir' | Validation failed for parameter 'FECHA'. Invalid date.
+[2025-09-28T21:02:33.451Z] Exito en /ApiCierreCaja/monedas/getConvertir' | Conversion de moneda realizada correctamente.
+[2025-09-28T21:04:19.925Z] Exito en /ApiCierreCaja/monedas/getConvertir' | Conversion de moneda realizada correctamente.
+[2025-09-28T21:34:20.303Z] Exito en /ApiCierreCaja/cajas/getResultadoCaja' | Consulta de resultado de caja realizada correctamente.
+[2025-09-28T22:12:08.706Z] Error en /ApiCierreCaja/cajas/getResultadoCaja' | CODUSUARIO is not defined
+[2025-09-28T22:13:52.019Z] Exito en /ApiCierreCaja/cajas/getResultadoCaja' | Consulta de resultado de caja realizada correctamente.
+[2025-09-28T22:14:22.347Z] Error en /ApiCierreCaja/cajas/getResultadoCaja' | Cannot read properties of undefined (reading 'push')
+[2025-09-28T22:15:15.161Z] Exito en /ApiCierreCaja/cajas/getResultadoCaja' | Consulta de resultado de caja realizada correctamente.
+[2025-09-28T22:49:56.295Z] Error en /ApiCierreCaja/cajas/getVerAsiento' | db is not defined
+[2025-09-28T22:50:22.787Z] Exito en /ApiCierreCaja/cajas/getVerAsiento' | Consulta de ver asiento realizada correctamente.
