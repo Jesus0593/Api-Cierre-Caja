@@ -1117,6 +1117,100 @@ END
 
 ')
 END
+	`,
+	`
+	IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID (N'[ripAppWeb].[GET_CUENTAS_CONTABLES_MULTIPLE]') AND type IN (N'P'))
+BEGIN
+EXEC ('
+-- 2. Crear el nuevo procedimiento almacenado
+CREATE PROCEDURE [ripAppWeb].[GET_CUENTAS_CONTABLES_MULTIPLE]
+    @CODIGO_USUARIO INT,
+    @CODIGO_GESTION INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Tabla temporal para almacenar los nombres de las bases de datos y sus códigos
+    CREATE TABLE #BDsContables (
+        Codigo_Contable INT,
+        PathBDContable NVARCHAR(128)
+    );
+
+    -- Tabla temporal para acumular todos los resultados (el retorno final)
+    CREATE TABLE #ResultadosFinales (
+        CODUSUARIO INT,
+        CODGESTION INT,
+        CODCONTABLE INT,
+        PATHBD NVARCHAR(128),
+        CUENTA NVARCHAR(50), 
+        TITULO NVARCHAR(255) 
+    );
+
+    -- 1. Obtener TODOS los Paths y Códigos Contables asociados al usuario y gestión
+    INSERT INTO #BDsContables (Codigo_Contable, PathBDContable)
+    SELECT DISTINCT
+        CODEMPRESACONTABLE, 
+        BDCONTABLE
+    FROM ripAppWeb.EMPRESAUSUARIOS
+    WHERE CODUSUARIO = @CODIGO_USUARIO
+      AND CODEMPRESAGESTION = @CODIGO_GESTION
+      -- Opcional: Filtro para asegurar que el path no sea nulo o vacío
+      AND BDCONTABLE IS NOT NULL AND BDCONTABLE <> ''''; 
+    
+    -- 2. Declarar variables para el bucle
+    DECLARE @PathContable NVARCHAR(128);
+    DECLARE @CodigoContable INT;
+    DECLARE @SQL NVARCHAR(MAX);
+
+    -- 3. Usar un cursor para iterar sobre cada base de datos contable encontrada
+    DECLARE db_cursor CURSOR FOR 
+    SELECT Codigo_Contable, PathBDContable FROM #BDsContables;
+
+    OPEN db_cursor;
+    FETCH NEXT FROM db_cursor INTO @CodigoContable, @PathContable;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- 4. Construir y ejecutar el SQL dinámico para la base de datos actual (@PathContable)
+        
+        SET @SQL = N''
+            INSERT INTO #ResultadosFinales (CODUSUARIO, CODGESTION, CODCONTABLE, PATHBD, CUENTA, TITULO)
+            SELECT
+                '' + CAST(@CODIGO_USUARIO AS NVARCHAR(10)) + N'',   -- Parámetro de entrada
+                '' + CAST(@CODIGO_GESTION AS NVARCHAR(10)) + N'',   -- Parámetro de entrada
+                '' + CAST(@CodigoContable AS NVARCHAR(10)) + N'',   -- Código Contable actual
+                '''' + @PathContable + N'''',                       -- Nombre de la BD actual
+                C.Codigo, 
+                C.titulo 
+            FROM '' + QUOTENAME(@PathContable) + N''.[dbo].[cuentas] AS C;
+        '';
+
+        -- Usamos TRY/CATCH para manejar bases de datos inaccesibles o tablas inexistentes sin fallar
+        BEGIN TRY
+            EXECUTE sp_executesql @SQL;
+        END TRY
+        BEGIN CATCH
+            -- Opcional: Aquí podrías loguear un error si una BD no existe o la tabla ''cuentas'' falla
+            PRINT ''ADVERTENCIA: No se pudo consultar la BD Contable: '' + @PathContable + '' Error: '' + ERROR_MESSAGE();
+        END CATCH
+
+        FETCH NEXT FROM db_cursor INTO @CodigoContable, @PathContable;
+    END
+
+    CLOSE db_cursor;
+    DEALLOCATE db_cursor;
+
+    -- 5. Devolver el conjunto de resultados acumulado
+    SELECT 
+      --  CODUSUARIO,
+       -- CODGESTION,
+        CODCONTABLE,
+        PATHBD,
+        CUENTA,
+        TITULO
+    FROM #ResultadosFinales;
+END ')
+END
 	`
 
   ]

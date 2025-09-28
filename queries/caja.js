@@ -3,12 +3,12 @@ export const QuerysCajas =
     getResultadoCaja:
 	`
 		
-		EXEC RIP.RESULTADO_CAJA @FECHA , @CAJA
+		EXEC ripAppWeb.RESULTADOSCAJAS @FECHA , @CAJA
 	`,
 	 getResultadoAsiento:
 	`
 		
-		EXEC RIP.VER_ASIENTO @FECHA , @CAJA , @REDONDEO , @Z
+		EXEC ripAppWeb.VERASIENTOCAJA @FECHA , @CAJA , @REDONDEO , @Z
 	`
 	
 }
