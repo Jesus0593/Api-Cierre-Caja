@@ -19,17 +19,17 @@ app.use(bodyParser.json());
 
 
 app.use('/ApiCierreCaja',loginRoutes);
-app.use('/ApiCierreCaja/usuarios', usuariosRoutes);
-app.use('/ApiCierreCaja/empresas',empresasRoutes);
-app.use('/ApiCierreCaja/cuentas', cuentasRoutes);
-app.use('/ApiCierreCaja/monedas',monedasRoutes);
+app.use('/ApiCierreCaja/usuarios', usuariosRoutes);//
+app.use('/ApiCierreCaja/empresas',empresasRoutes);//
+app.use('/ApiCierreCaja/cuentas', cuentasRoutes);//
+app.use('/ApiCierreCaja/monedas',monedasRoutes);//
 app.use('/ApiCierreCaja/caja', cajaRoutes);
-app.use('/ApiCierreCaja/configuracion', configuracionRoutes);
+app.use('/ApiCierreCaja/configuracion', configuracionRoutes);//
 
 
 
 
 // Servidor en escucha
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}, ${secure.encrypt('VELERO')}`);
+    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}, ${secure.encrypt('VELERO')}, ${secure.decrypt('85878B8376807C77')} `);
 });

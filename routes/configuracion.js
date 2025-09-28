@@ -72,6 +72,8 @@ router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
     
    // Validar datos
   if (database === null || database === undefined || codusuario === null || codusuario === undefined) {
+        const rutaerrorMessage = `Error en ${ruta}/ejecutarScriptEmpresas' | Faltan datos requeridos (codusuario, database)`;
+        await writeLog(rutaerrorMessage);
         return res.status(400).json({ error: 'Faltan datos requeridos (codusuario, database)' });
     }
 

@@ -1119,7 +1119,7 @@ END
 END
 	`,
 	`
-	IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID (N'[ripAppWeb].[GET_CUENTAS_CONTABLES_MULTIPLE]') AND type IN (N'P'))
+		IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID (N'[ripAppWeb].[GET_CUENTAS_CONTABLES_MULTIPLE]') AND type IN (N'P'))
 BEGIN
 EXEC ('
 -- 2. Crear el nuevo procedimiento almacenado
@@ -1179,7 +1179,7 @@ BEGIN
                 '' + CAST(@CODIGO_USUARIO AS NVARCHAR(10)) + N'',   -- Parámetro de entrada
                 '' + CAST(@CODIGO_GESTION AS NVARCHAR(10)) + N'',   -- Parámetro de entrada
                 '' + CAST(@CodigoContable AS NVARCHAR(10)) + N'',   -- Código Contable actual
-                '''' + @PathContable + N'''',                       -- Nombre de la BD actual
+                '''''' + @PathContable + N'''''',                       -- Nombre de la BD actual
                 C.Codigo, 
                 C.titulo 
             FROM '' + QUOTENAME(@PathContable) + N''.[dbo].[cuentas] AS C;
