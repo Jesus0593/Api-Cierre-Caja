@@ -1,2 +1,14 @@
-.env
+# Directorios de dependencias
+/node_modules
+
+# Archivos de compilación de TypeScript
+/dist
+/build
+
+# Logs
 server.log
+*.log
+
+# Variables de entorno (si usas un .env o similar)
+.env
+.env.local
