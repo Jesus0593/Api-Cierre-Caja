@@ -17,7 +17,8 @@ export const QuerysCuentas =
     `,
     getAllCuentas:
     `
-        SELECT CODIGO,TITULO FROM CUENTAS
+        
+        EXEC ripAppWeb.GET_CUENTAS_CONTABLES_MULTIPLE @CODUSUARIO, @CODIGOEMPRESA
     `
 
 }

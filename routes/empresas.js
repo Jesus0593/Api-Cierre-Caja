@@ -4,9 +4,27 @@ import { QuerysEmpresas } from '../queries/empresas.js';
 import mssql from 'mssql'
 import Encryptor from '../Security.js';
 import { verifyToken } from '../VerificarToken.js';
-const secure = new Encryptor();
 
+import fs from 'fs/promises'; // Importa el módulo de promesas de fs
+import path from 'path'; // Importa el módulo 'path' para construir rutas de archivo
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const writeLog = async (message) => {
+    const logFilePath = path.join(__dirname, '../server.log'); // <-- ¡Ahora __dirname está definido!
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+
+    try {
+        await fs.appendFile(logFilePath, logMessage, 'utf8');
+    } catch (error) {
+        console.error('Error al escribir en el archivo de log:', error);
+    }
+};
+const secure = new Encryptor();
+const ruta = `/ApiCierreCaja/empresas`
 const router = express.Router();
+
 
 router.post('/getEmpresas',verifyToken, async (req, res) => {
     try {
@@ -42,8 +60,21 @@ router.post('/getEmpresas',verifyToken, async (req, res) => {
         }
          return acc;}, {});
     const resultadoFinal = Object.values(agrupar);
-    res.status(200).json(resultadoFinal);
+    const objetoUsuario = resultadoFinal[0];
+
+     
+        if (!objetoUsuario) {
+             const rutaNotFoundMessage = `Aviso en ${ruta}/getEmpresas' | Usuario ${codusuario} no tiene empresas asignadas.`;
+             await writeLog(rutaNotFoundMessage);
+             // Devuelve un 404 si el usuario no tiene datos
+             return res.status(404).json({ message: 'Usuario no encontrado o sin empresas asignadas.' });
+        }
+    const rutaexitoMessage = `Exito en ${ruta}/getEmpresas' | Usuario ${codusuario} obtuvo sus empresas correctamente.`;
+    await writeLog(rutaexitoMessage);
+    res.status(200).json(objetoUsuario);
     } catch (error) {
+        const rutaerrorMessage = `Error en ${ruta}/getEmpresas' | ${error.message}`;
+        await writeLog(rutaerrorMessage);
         res.status(500).send('Error al obtener los datos: ' + error.message);
     }
 });
@@ -51,6 +82,8 @@ router.post('/getEmpresas',verifyToken, async (req, res) => {
 router.post('/getTiendasCajas', async (req, res) => {
     const { codusuario,database } = req.body; 
      if (database === null || database === undefined || codusuario === null || codusuario === undefined) {
+        const rutaerrorMessage = `Error en ${ruta}/ejecutarScriptEmpresas' | Faltan datos requeridos (codusuario, database)`;
+        await writeLog(rutaerrorMessage);
         return res.status(400).json({ error: 'Faltan datos requeridos (codusuario, database)' });
     }
     try {
@@ -89,8 +122,11 @@ router.post('/getTiendasCajas', async (req, res) => {
          return acc;}, {});
     const resultadoFinal = Object.values(agrupar);
     res.status(200).json(resultadoFinal);
+    const rutaexitoMessage = `Exito en ${ruta}/getTiendasCajas' | Usuario ${codusuario} obtuvo sus tiendas y cajas correctamente.`;
+    await writeLog(rutaexitoMessage);
         
     } catch (error) {
+        const rutaerrorMessage = `Error en ${ruta}/getTiendasCajas' | ${error.message}`;
         res.status(500).send('Error al obtener los datos: ' + error.message);
     }
 });

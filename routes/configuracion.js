@@ -22,6 +22,7 @@ const writeLog = async (message) => {
         console.error('Error al escribir en el archivo de log:', error);
     }
 };
+const ruta = `/ApiCierreCaja/configuracion`
 
 router.get('/ejecutarScriptGeneral', async (req, res) => {
     const errores = []; // Array para almacenar los errores de cada sentencia
@@ -40,7 +41,8 @@ router.get('/ejecutarScriptGeneral', async (req, res) => {
                 // Si esta sentencia falla, registra el error y continúa con la siguiente
                 const errorMessage = `Error al ejecutar la sentencia: ${query.substring(0, 150)}... | ${error.message}`;
                 errores.push(errorMessage);
-                await writeLog(errorMessage);
+                const rutaerrorMessage = `Error en ${ruta}/ejecutarScriptGeneral' | ${errorMessage}`;
+                await writeLog(rutaerrorMessage);
             }
         }
 
@@ -53,10 +55,14 @@ router.get('/ejecutarScriptGeneral', async (req, res) => {
         } else {
             // Si no hubo errores, devuelve un mensaje de éxito
             res.status(200).json({ message: 'Script ejecutado exitosamente.' });
+            const rutaexitoMessage = `Exito en ${ruta}/ejecutarScriptGeneral' | Script ejecutado exitosamente.`;
+            await writeLog(rutaexitoMessage);
         }
     } catch (error) {
         // Este catch externo es para errores de conexión a la BD, etc.
         res.status(500).send('Error grave en el proceso: ' + error.message);
+        const rutaerrorMessage = `Error grave en ${ruta}/ejecutarScriptGeneral' | ${error.message}`;
+        await writeLog(rutaerrorMessage);
     }
 });
 
@@ -66,6 +72,8 @@ router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
     
    // Validar datos
   if (database === null || database === undefined || codusuario === null || codusuario === undefined) {
+        const rutaerrorMessage = `Error en ${ruta}/ejecutarScriptEmpresas' | Faltan datos requeridos (codusuario, database)`;
+        await writeLog(rutaerrorMessage);
         return res.status(400).json({ error: 'Faltan datos requeridos (codusuario, database)' });
     }
 
@@ -82,7 +90,8 @@ router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
                 // Si esta sentencia falla, registra el error y continúa
                 const errorMessage = `Error en ${database} al ejecutar la sentencia: ${query.substring(0, 50)}... | ${error.message}`;
                 errores.push(errorMessage);
-                await writeLog(errorMessage);
+                const rutaerrorMessage = `Error en ${ruta}/ejecutarScriptEmpresas' | ${errorMessage}`; 
+                await writeLog(rutaerrorMessage);
             }
         }
 
@@ -96,6 +105,8 @@ router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
             // Si no hubo errores, devuelve un mensaje de éxito
             const successMessage = `Script para ${database} ejecutado exitosamente.`;
             res.status(200).json({ message: successMessage });
+            const rutaexitoMessage = `Exito en ${ruta}/ejecutarScriptEmpresas' | ${successMessage}`;
+            await writeLog(rutaexitoMessage);
         }
         
     } catch (error) {
@@ -103,6 +114,8 @@ router.post('/ejecutarScriptEmpresas', verifyToken, async (req, res) => {
         const errorMessage = `Error grave en el proceso para ${database}: ${error.message}`;
         await writeLog(errorMessage);
         res.status(500).send(errorMessage);
+        const rutaerrorMessage = `Error grave en ${ruta}/ejecutarScriptEmpresas' | ${errorMessage}`;
+        await writeLog(rutaerrorMessage);
     }
 });
 
