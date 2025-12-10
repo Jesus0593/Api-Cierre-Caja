@@ -31,5 +31,5 @@ app.use('/ApiCierreCaja/configuracion', configuracionRoutes);
 
 // Servidor en escucha
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}, ${secure.encrypt('VELERO')}`);
+    console.log(`Servidor corriendo en mi maquina http://localhost:${PORT}, ${secure.encrypt('masterkey')}`);
 });
